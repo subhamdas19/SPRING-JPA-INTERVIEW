@@ -78,3 +78,44 @@ and then write the following query:
 List<User> fetchUser();
 
 Note that this is not native, but jpql query.
+
+
+
+
+
+
+
+
+-----------------
+
+
+So let's say I have two tables called student and class. class id is a foreign key in student table. The class id column for some students might also be empty (means no class is assigned to them). If we use spring jpa to fetch data for such students, then the class entity object would be null. I would rather want an empty object instead of null so that manual null checks are avoided. How do I achieve this?
+
+Student Entity - Student Id, Name, Age, Class Id
+Class Entity - Class Id, Class Name, Appointed Teacher Name
+
+
+Anyhow you endup with a direct or in-direct manual check.
+
+Fetching records as java 8 optional would help.
+
+When you use field-type access, you can implement the getter and setter methods in your own way. You can, for example, implement a getMyValue() method which wraps the myValue attribute in an Optional
+
+@Entity
+public class SomeClass {
+
+...
+
+@Column
+private String myValue;
+
+ ...
+
+ public Optional getMyValue() {
+    return Optional.ofNullable(myValue);
+ }
+
+ public void setMyValue(LocalDate myValue) {
+    this.myValue= myValue;
+ }
+...

@@ -9,3 +9,72 @@ https://www.baeldung.com/hibernate-one-to-many
 
 
 https://www.baeldung.com/hibernate-notnull-vs-nullable
+
+
+
+
+    @Basic signifies that an attribute is to be persisted and a standard mapping is to be used. It has parameters which allow you to specify whether the attribute is to be lazily loaded and whether it's nullable.
+
+    @Column allows you to specify the name of the column in the database to which the attribute is to be persisted.
+
+If you specify one without the other then you get default behaviour which is sensible, so commonly folks use only one with the exception of special cases.
+
+So if we wanted a lazy loading of an attribute and to specify a column name we can say
+
+ @Basic(fetch=FetchType.LAZY)
+ @Column(name="WIBBLE")
+
+If we neeed the default, non-lazy behaviour then just the @Column would have been sufficient.
+
+
+
+
+
+I have Table User in SQL Server DB with close to 30 columns. I have also created an JPA Entity for corresponding DB Table. The JPA entity looks something like this:
+
+@Entity
+@Table(name="USER")
+@Setter
+@Getter
+public class User{
+
+@Id
+@Column(name="ID",nullable=false)
+private Integer id;
+
+@Column(name="NAME")
+private String name;
+
+@Column(name="ADDRESS")
+private String address;
+
+@Column(name="FATHER_NAME")
+private String fathersName;
+
+}
+
+Now I am trying to create a native query which will only fetch id and name from the User Table. 
+
+You can define additional constructor for the User entity:
+
+@Entity
+@Table(name="USER")
+public class User {
+
+   public User(){
+   }
+
+   public User(Integer id, String name){
+      this.id = id;
+      this.name = name;
+   }
+
+   // ...
+}
+
+and then write the following query:
+
+@Query("select new your.package.User(u.id, u.name) from User u")
+List<User> fetchUser();
+
+Note that this is not native, but jpql query.

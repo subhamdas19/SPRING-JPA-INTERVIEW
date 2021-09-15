@@ -119,3 +119,6 @@ private String myValue;
     this.myValue= myValue;
  }
 ...
+
+CASCADE TYPES
+https://www.baeldung.com/jpa-cascade-types
